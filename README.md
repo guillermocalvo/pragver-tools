@@ -1,4 +1,8 @@
 
+[![Last release](https://img.shields.io/github/release/pragver/pragver-tools.svg)](https://github.com/pragver/pragver-tools/releases)
+[![Build status](https://travis-ci.org/pragver/pragver-tools.svg?branch=master)](https://travis-ci.org/pragver/pragver-tools)
+[![Code coverage](https://codecov.io/github/pragver/pragver-tools/coverage.svg?branch=master)](https://codecov.io/github/pragver/pragver-tools?branch=master)
+
 # PragVer Tools
 
 > Create, handle and bump pragmatic version identifiers
