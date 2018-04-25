@@ -1,5 +1,5 @@
 
-[![Last release](https://img.shields.io/github/release/pragver/pragver-tools.svg)](https://github.com/pragver/pragver-tools/releases)
+[![Last release](https://img.shields.io/github/tag/pragver/pragver-tools.svg?label=release&colorB=007ec6)](https://github.com/pragver/pragver-tools/releases)
 [![Build status](https://travis-ci.org/pragver/pragver-tools.svg?branch=master)](https://travis-ci.org/pragver/pragver-tools)
 [![Code coverage](https://codecov.io/github/pragver/pragver-tools/coverage.svg?branch=master)](https://codecov.io/github/pragver/pragver-tools?branch=master)
 
