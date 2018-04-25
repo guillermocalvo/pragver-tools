@@ -1,0 +1,6 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: pragver-tools
+Description: Create, handle and bump pragmatic version identifiers
+Version: @VERSION@
