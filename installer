@@ -1,0 +1,54 @@
+#!/bin/bash
+
+#
+# PragVer Tools -- Bash installer
+#
+# This script installs the latest released version of pragver-tools in your
+# local bin directory.
+#
+# ```
+# bash <(curl -Ls https://raw.githubusercontent.com/pragver/pragver-tools/master/installer)
+# ```
+
+LOCAL_BIN=~/bin
+BASE_URL=https://raw.githubusercontent.com/pragver/pragver-tools/master/src
+
+function download(){
+	FILE=$1
+	echo "  - File: $FILE"
+	curl -LSso $LOCAL_BIN/$FILE $BASE_URL/$FILE
+}
+
+echo Checking local bin directory...
+mkdir -p $LOCAL_BIN
+
+if [ ! -d $LOCAL_BIN ]; then
+	echo "Error: Could not create local bin directory"
+	exit 1
+fi
+
+echo "Downloading files..."
+download pragver
+download pragver-auto.sh
+download pragver-bump.sh
+download pragver-extract.sh
+download pragver-new.sh
+download pragver-validate.sh
+
+if [ ! -f $LOCAL_BIN/pragver ]; then
+	echo "Error: PragVer Tools could not be downloaded"
+	exit 1
+fi
+
+echo Making file executable...
+chmod +x $LOCAL_BIN/pragver
+
+echo Checking the installed version...
+VERSION=`pragver --version 2> /dev/null`
+
+if [ $? -ne 0 ]; then
+	echo "Error: PragVer Tools could not be installed"
+	exit 1
+fi
+
+echo "PragVer Tools version $VERSION was installed successfully"
