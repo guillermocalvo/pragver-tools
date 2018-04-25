@@ -1,0 +1,38 @@
+language: generic
+
+sudo: required
+
+addons:
+  apt:
+    packages:
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - cmake
+
+after_success:
+  - ./INSTALL-KCOV.sh
+  - ./COVERAGE.sh
+  - bash <(curl -s https://codecov.io/bash)
+
+after_failure:
+  - echo Storing test result files temporarily...
+  - tar -zchf test.tar.gz test
+  - curl -F "file=@test.tar.gz" https://file.io
+
+script:
+  - echo travis_fold:start:AUTORECONF
+  - autoreconf --install
+  - echo travis_fold:end:AUTORECONF
+
+  - echo travis_fold:start:CONFIGURE
+  - ./configure
+  - echo travis_fold:end:CONFIGURE
+
+  - echo travis_fold:start:INSTALL
+  - sudo make install
+  - echo travis_fold:end:INSTALL
+
+  - echo travis_fold:start:TESTS
+  - make tests
+  - echo travis_fold:end:TESTS

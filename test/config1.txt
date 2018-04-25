@@ -1,0 +1,5 @@
+.meta/VERSION2
+
+.meta/TRACKED2
+YES
+1.2.3.4

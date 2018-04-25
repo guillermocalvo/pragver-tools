@@ -1,0 +1,25 @@
+{
+  "name":           "pragver-tools",
+  "version":        "0.1.0.0",
+  "description":    "Create, handle and bump pragmatic version identifiers",
+  "repo":           "pragver/pragver-tools",
+  "license":        "GPL",
+  "install":        "sh INSTALL",
+  "src": [
+    "src/pragver",
+    "src/pragver-auto.sh",
+    "src/pragver-bump.sh",
+    "src/pragver-extract.sh",
+    "src/pragver-new.sh",
+    "src/pragver-validate.sh"
+  ],
+  "keywords": [
+    "bash",
+    "script",
+    "bump",
+    "version",
+    "pragmatic",
+    "versioning",
+    "pragver"
+  ]
+}
