@@ -1,0 +1,127 @@
+#!/bin/bash
+
+#
+# PragVer Tools -- Create, handle and bump pragmatic version identifiers
+#
+# version   0.1.0.0
+# author    Copyright (c) 2018 Guillermo Calvo
+# license   GNU General Public License
+# website   https://pragver.github.io/pragver-tools/
+# repo      https://github.com/pragver/pragver-tools/
+#
+
+#
+# Current version
+#
+readonly PRAGVER_TOOLS_VERSION="0.1.0.0"
+
+#
+# Usage & Help
+#
+read -r -d '' HELP_PRAGVER <<'EOF'
+
+Usage: pragver <COMMAND>
+       pragver <OPTION>
+
+Available commands are:
+
+  validate      Validate pragmatic version identifiers.
+  new           Create a new pragmatic version identifier.
+  bump          Bump a pragmatic version identifier.
+  auto          Automatically handle the pragmatic version in a workspace.
+
+Available options are:
+
+  --version     Display pragver-tools version and exit.
+  --help        Display this help and exit.
+
+Try 'pragver <command> --help' for details.
+EOF
+
+#
+# Error codes
+#
+readonly EXIT_SUCCESS=0
+readonly EXIT_IO_ERROR=100
+readonly EXIT_CANCELED=101
+readonly EXIT_UNKNOWN_COMMAND=102
+readonly EXIT_UNKNOWN_OPTION=103
+readonly EXIT_INVALID_WORKSPACE=104
+readonly EXIT_INVALID_STATUS=105
+readonly EXIT_INVALID_VERSION=106
+readonly EXIT_INVALID_PARAM=107
+readonly EXIT_INVALID_RELEASE=108
+readonly EXIT_INVALID_BUILD=109
+
+#
+# Regular expressions
+#
+readonly RE_NUMBER="(0|[1-9]+[0-9]*)"
+readonly RE_METADATA="(([A-Za-z0-9\-])+(\.([A-Za-z0-9\-])+)*)"
+readonly RE_PRAGVER="$RE_NUMBER\.$RE_NUMBER\.$RE_NUMBER\.$RE_NUMBER(\-$RE_METADATA)?(\+$RE_METADATA)?"
+readonly RE_STRICT_PRAGVER="^$RE_PRAGVER$"
+readonly RE_ANY_PRAGVER="\b$RE_PRAGVER\b"
+readonly METADATA_PATTERN="^($RE_METADATA)?$"
+readonly METADATA_FILTER="s/[^-A-Za-z0-9\.]/\./g ; s/(\.\.+)/\./g ; s/^\.// ; s/\.$//"
+
+#
+# Import script
+#
+function import(){
+	local FILE_PATH="$PRAGVER_TOOLS_HOME/pragver-$1.sh"
+	source "$FILE_PATH" || panic 1 "Import error: No such file: $FILE_PATH"
+}
+
+#
+# Log verbose messages
+#
+function verbose(){
+	if [[ -n $VERBOSITY ]]; then
+		local MODULE=`basename ${BASH_SOURCE[1]} | sed -E 's/.*\-(.*)\.sh/\\1/'`
+		>&2 echo -e "[DEBUG] $MODULE: $@"
+	fi
+}
+
+#
+# Log error message and exit
+#
+function panic(){
+	local EXIT_CODE=$1
+	shift
+	>&2 echo -e "Error: $@"
+	exit $EXIT_CODE
+}
+
+# pargaver-tools home
+if [ -z "$PRAGVER_TOOLS_HOME" ]; then
+	PRAGVER_TOOLS_HOME=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+fi
+
+#
+# Parse command
+#
+COMMAND="$1"
+shift
+case $COMMAND in
+	""|"--help")
+		echo -e "$HELP_PRAGVER"
+		exit $EXIT_SUCCESS
+	;;
+	"--version")
+		echo "$PRAGVER_TOOLS_VERSION"
+		exit $EXIT_SUCCESS
+	;;
+	*)
+		if [[ "$COMMAND" =~ "--" ]]; then
+			panic $EXIT_UNKNOWN_OPTION "Unknown option: \"$COMMAND\"\n$HELP_PRAGVER"
+		else
+			COMMAND_FILE=$PRAGVER_TOOLS_HOME/pragver-$COMMAND.sh
+			if [ -f "$COMMAND_FILE" ]; then
+				source "$COMMAND_FILE"
+				$COMMAND "$@"
+			else
+				panic $EXIT_UNKNOWN_COMMAND "Unknown command: \"$COMMAND\"\n$HELP_PRAGVER"
+			fi
+		fi
+	;;
+esac
