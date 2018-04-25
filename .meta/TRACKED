@@ -1,0 +1,4 @@
+# Automatically tracked files
+/configure.ac
+/src/pragver
+/test/test-pragver.sh
